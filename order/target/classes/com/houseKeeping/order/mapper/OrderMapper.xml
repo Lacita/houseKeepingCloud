@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.houseKeeping.order.mapper.OrderMapper">
+
+    <select id="selectTaskByPhoneUsers" resultType="com.houseKeeping.order.entity.TaskInfo">
+        select distinct a.id,a.ordername,a.area,a.reporter,a.phone,a.message,a.createtime,a.order_status,a.img,a.note
+        from task_info a inner join
+        task_union_phone_user b on a.id=b.task_id
+        where b.phone_user_id = #{phoneUser} and order_status = 2 order by createtime desc limit #{start},#{size}
+    </select>
+
+    <select id="selectFinishByPhoneUser" resultType="com.houseKeeping.order.entity.TaskInfo">
+        select distinct a.id,a.ordername,a.area,a.reporter,a.phone,a.message,a.createtime,a.order_status,a.img,a.note
+        from task_info a inner join task_union_phone_user b on a.id=b.task_id
+        where b.phone_user_id = #{phoneUser} and order_status = 3 limit #{start},#{size}
+    </select>
+
+    <resultMap id="TaskInfoShow" type="com.houseKeeping.order.entity.TaskInfoShow">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="ordername" property="ordername" jdbcType="VARCHAR"/>
+        <result column="reporter" property="reporter" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+        <result column="createtime" property="createtime"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="end_time" property="endTime"/>
+        <result column="begin_work" property="beginWork"/>
+        <!--        <result column="note" property="note" jdbcType="VARCHAR"/>-->
+        <!--        <association property="phoneUsers" javaType="com.housekeeping.project.housekeeping.Pojo.PhoneUsers">-->
+        <!--            <id column="id" property="id" jdbcType="VARCHAR"/>-->
+        <result column="userNameTask" property="userNameTask" jdbcType="VARCHAR"/>
+        <result column="userPhoneTask" property="userPhoneTask" jdbcType="VARCHAR"/>
+        <!--        </association>-->
+    </resultMap>
+
+    <sql id="Base_TaskDetail_List">
+        a.id,a.ordername,a.reporter,a.phone,a.area,a.message,a.begin_work,a.img,a.order_status,a.createtime,a.end_time,a.note,b.username
+        as userNameTask,b.phone as userPhoneTask
+    </sql>
+
+    <select id="selectTaskDetailList" resultMap="TaskInfoShow">
+        select
+        <include refid="Base_TaskDetail_List"/>
+        from
+        task_info a
+        left join
+        phone_users b
+        on a.`pickup_user`=b.`id`
+        where a.order_status = 3
+        limit #{offSet},#{size}
+    </select>
+
+    <select id="SearchTaskInfoFinishCount" resultType="int">
+        select count(*) from task_info where order_status = 3
+    </select>
+
+</mapper>

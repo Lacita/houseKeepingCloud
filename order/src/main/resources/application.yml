@@ -1,0 +1,41 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: order
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8070
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1/housekeeping?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 123456
+    #连接池配置
+    druid:
+      initialSize: 10
+      minIdle: 2
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000  #检测需要关闭的空闲连接，是6秒。
+      minEvictableIdleTimeMillis: 300000 #连接在池中最小生存的时间是300秒
+      validationQuery: SELECT 1 FROM DUAL
+  elasticsearch:
+    rest:
+      uris: http://localhost:9200
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  global-config:
+    db-config:
+      id-type:
+      field-strategy: NOT_EMPTY
+      db-type: MYSQL
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
