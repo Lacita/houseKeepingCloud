@@ -2,9 +2,9 @@ package com.houseKeeping.order.config;
 
 public class AliYunConstant {
 
-    public static final String ACCESS_KEY = "LTAI5tLDQufyDbMYvd6UZ1Nn";
+    public static final String ACCESS_KEY = "";
 
-    public static final String ACCESS_KEY_SECRET= "KFzkMGGaYXlekCTd0PF7UpmnvFCzak";
+    public static final String ACCESS_KEY_SECRET= "";
 
     public static final String BASE_URL="https://dgbaisuishan.com.cn/";
 
